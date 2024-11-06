@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Social Media App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="socialMediaApp">
+    <div ng-controller="RegisterController">
+        <h1>Register</h1>
+        <form ng-submit="register()"> <!-- ng-submit should be on the form tag -->
+            <label>Username:</label>
+            <input type="text" ng-model="user.username" required><br><br>
+
+            <label>First Name:</label>
+            <input type="text" ng-model="user.first_name" required><br><br>
+
+            <label>Middle Name (Optional):</label>
+            <input type="text" ng-model="user.middle_name"><br><br>
+
+            <label>Last Name:</label>
+            <input type="text" ng-model="user.last_name" required><br><br>
+
+            <label>Suffix (Optional):</label>
+            <input type="text" ng-model="user.suffix"><br><br>
+
+            <label>Password:</label>
+            <input type="password" ng-model="user.password" required><br><br>
+
+            <!-- Button type should be "submit" -->
+            <button type="submit">Register</button>
+        </form>
+        <div ng-if="responseMessage">{{ responseMessage }}</div>
+        <p>Already have an account? <a href="/login.html">Login here</a></p>
+    </div>
+
+    <script>
+        var app = angular.module('socialMediaApp', []);
+        app.controller('RegisterController', function($scope, $http) {
+            $scope.responseMessage = '';
+
+            // Register function
+            $scope.register = function() {
+                const userData = {
+                    username: $scope.user.username,  // Added username
+                    first_name: $scope.user.first_name,
+                    middle_name: $scope.user.middle_name,
+                    last_name: $scope.user.last_name,
+                    suffix: $scope.user.suffix,
+                    password: $scope.user.password
+                };
+
+                $http.post('/register', userData).then(function(response) {
+                    $scope.responseMessage = response.data.message;
+                }).catch(function(error) {
+                    $scope.responseMessage = error.data.message;
+                });
+            };
+        });
+    </script>
+</body>
+</html>

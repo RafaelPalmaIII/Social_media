@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Social Media App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="socialMediaApp">
+    <div ng-controller="LoginController">
+        <h1>Login</h1>
+        <form ng-submit="login()">
+            <label>Username:</label>
+            <input type="text" ng-model="loginData.username" required><br><br>
+
+            <label>Password:</label>
+            <input type="password" ng-model="loginData.password" required><br><br>
+
+            <button type="submit">Login</button>
+        </form>
+        <div ng-if="responseMessage">{{ responseMessage }}</div>
+        <p>Don't have an account? <a href="/register.html">Register here</a></p>
+    </div>
+
+    <script>
+        var app = angular.module('socialMediaApp', []);
+        app.controller('LoginController', function($scope, $http) {
+            $scope.responseMessage = '';
+
+            // Login function
+            $scope.login = function() {
+                const loginData = {
+                    username: $scope.loginData.username,  // Use username
+                    password: $scope.loginData.password
+                };
+
+                $http.post('/login', loginData).then(function(response) {
+                    $scope.responseMessage = response.data.message;
+                }).catch(function(error) {
+                    $scope.responseMessage = error.data.message;
+                });
+            };
+        });
+    </script>
+</body>
+</html>

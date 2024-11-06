@@ -181,7 +181,7 @@ class Router implements RouterInterface
     }
 
     /**
-     * Finds the controller corresponding to the URI.
+     * Finds the controller method corresponding to the URI.
      *
      * @param string|null $uri URI path relative to baseURL
      *
@@ -241,7 +241,7 @@ class Router implements RouterInterface
     }
 
     /**
-     * Returns the name of the matched controller or closure.
+     * Returns the name of the matched controller.
      *
      * @return (Closure(mixed...): (ResponseInterface|string|void))|string Controller classname or Closure
      */
@@ -254,7 +254,7 @@ class Router implements RouterInterface
 
     /**
      * Returns the name of the method to run in the
-     * chosen controller.
+     * chosen container.
      */
     public function methodName(): string
     {

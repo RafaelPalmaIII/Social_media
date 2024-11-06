@@ -526,10 +526,9 @@ if (! function_exists('reduce_multiples')) {
      */
     function reduce_multiples(string $str, string $character = ',', bool $trim = false): string
     {
-        $pattern = '#' . preg_quote($character, '#') . '{2,}#';
-        $str     = preg_replace($pattern, $character, $str);
+        $str = preg_replace('#' . preg_quote($character, '#') . '{2,}#', $character, $str);
 
-        return $trim ? trim($str, $character) : $str;
+        return ($trim) ? trim($str, $character) : $str;
     }
 }
 

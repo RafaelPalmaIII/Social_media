@@ -784,9 +784,9 @@ abstract class BaseConnection implements ConnectionInterface
      *
      * @return $this
      */
-    public function transException(bool $transException)
+    public function transException(bool $transExcetion)
     {
-        $this->transException = $transException;
+        $this->transException = $transExcetion;
 
         return $this;
     }
