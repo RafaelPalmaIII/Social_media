@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Profile</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body ng-app="socialMediaApp" ng-controller="ProfileController">
+
+    <div ng-if="user">
+        <h1>Update your profile, {{ user.first_name }}!</h1>
+        
+        <!-- Profile update form -->
+        <form ng-submit="updateProfile()">
+            <label>First Name:</label>
+            <input type="text" ng-model="user.first_name" required><br>
+            
+            <label>Middle Name:</label>
+            <input type="text" ng-model="user.middle_name"><br>
+
+            <label>Last Name:</label>
+            <input type="text" ng-model="user.last_name" required><br>
+
+            <label>Suffix:</label>
+            <input type="text" ng-model="user.suffix"><br>
+
+            <label>Username:</label>
+            <input type="text" ng-model="user.username" required><br>
+
+            <label>Password:</label>
+            <input type="password" ng-model="user.password" placeholder="Leave blank to keep current password"><br>
+
+            <button type="submit">Update Profile</button>
+            <button type="button" ng-click="cancelUpdate()">Cancel</button>
+        </form>
+
+        <button ng-click="logout()">Logout</button>
+    </div>
+
+    <div ng-if="!user">
+        <h1>Please log in to access your profile.</h1>
+        <a href="/login">Go to Login</a>
+    </div>
+
+    <script>
+        var app = angular.module('socialMediaApp', []);
+
+        app.controller('ProfileController', function($scope, $http, $window) {
+            // Fetch user session details from the server
+            $http.get('/user')
+                .then(function(response) {
+                    $scope.user = response.data.user;
+                    // Store the original user details to revert changes if needed
+                    $scope.originalUser = angular.copy($scope.user);
+                }, function(error) {
+                    $scope.user = null;
+                });
+
+            // Update profile function
+            $scope.updateProfile = function() {
+                if ($scope.user) {
+                    $http.post('/update-profile', $scope.user)
+                        .then(function(response) {
+                            alert('Profile updated successfully!');
+                        }, function(error) {
+                            alert('Error updating profile.');
+                        });
+                }
+            };
+
+            // Cancel profile update function (redirect to home page)
+            $scope.cancelUpdate = function() {
+                $window.location.href = '/';  // Redirect to home page (index.html)
+            };
+
+            // Logout function
+            $scope.logout = function() {
+                $http.get('/logout')
+                    .then(function() {
+                        $scope.user = null;
+                        $window.location.href = '/login';
+                    }, function(error) {
+                        console.error('Logout failed:', error);
+                    });
+            };
+        });
+    </script>
+
+</body>
+</html>

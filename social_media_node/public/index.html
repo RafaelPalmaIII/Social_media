@@ -3,12 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Social Media App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <h1>Welcome to the Social Media App!</h1>
-    <p>
-        <a href="/login.html">Login</a> | 
-        <a href="/register.html">Register</a>
-    </p>
+<body ng-app="socialMediaApp" ng-controller="MainController">
+
+    <div ng-if="user">
+        <h1>Hello, {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.suffix }} ({{ user.username }}), Welcome to Social Media App!</h1>
+        
+        <!-- Add a button to go to profile page -->
+        <button ng-click="goToProfile()">Go to Profile</button>
+        
+        <button ng-click="logout()">Logout</button>
+    </div>
+    
+    <div ng-if="!user">
+        <h1>Please log in to access the app.</h1>
+        <a href="/login">Go to Login</a>
+    </div>
+
+    <script>
+        var app = angular.module('socialMediaApp', []);
+
+        app.controller('MainController', function($scope, $http, $window) {
+            // Fetch user session details from the server
+            $http.get('/user')
+                .then(function(response) {
+                    $scope.user = response.data.user;
+                }, function(error) {
+                    $scope.user = null;
+                });
+
+            // Logout function
+            $scope.logout = function() {
+                $http.get('/logout')
+                    .then(function() {
+                        $scope.user = null;
+                        $window.location.href = '/login';
+                    }, function(error) {
+                        console.error('Logout failed:', error);
+                    });
+            };
+
+            // Navigate to the profile page
+            $scope.goToProfile = function() {
+                $window.location.href = '/profile.html';
+            };
+        });
+    </script>
+
 </body>
 </html>
